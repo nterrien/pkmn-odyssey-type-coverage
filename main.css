@@ -1,0 +1,316 @@
+* {
+    box-sizing: border-box
+}
+
+html {
+    min-height: 100%;
+    color: #404040;
+    font-family: "Fira Sans", "Trebuchet MS", Ubuntu, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none
+}
+
+main {
+    margin: 1.25rem auto 2rem;
+    padding: .75rem 1rem;
+    background-color: #fff
+}
+
+@media (min-width:620px) {
+    main {
+        margin-top: 2rem;
+        padding: 1.5rem 2rem
+    }
+}
+
+@media (min-width:900px) {
+    main {
+        min-height: 600px
+    }
+}
+
+@media (min-width:1220px) {
+    main {
+        border-radius: 4px
+    }
+}
+
+.grid-container {
+    margin: 0 auto;
+    max-width: 1220px
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+    margin: 0 0 1rem;
+    padding: 0
+}
+
+h1,
+h2,
+h3,
+h4 {
+    color: black;
+    font-weight: 700;
+    line-height: 1.2;
+    word-wrap: break-word;
+    overflow-wrap: break-word
+}
+
+@media (max-width:619px) {
+    h1 {
+        font-size: 2rem
+    }
+
+    h2 {
+        font-size: 1.5rem
+    }
+
+    h3 {
+        font-size: 1.25rem
+    }
+}
+
+.text-center {
+    text-align: center
+}
+
+.explainations {
+    --panel-text: #404040;
+    display: block;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 4px;
+    color: #404040;
+    background-color: #f0f0f0
+}
+
+.type-select {
+    max-width: 850px;
+    margin: 0 auto 1rem;
+    text-align: center;
+}
+
+.type-button {
+    cursor: pointer;
+    display: inline-block;
+    margin: 0 0.25rem 0.5rem;
+    padding: 8px;
+}
+
+.type-button:hover {
+    background-color: #f0f0f0;
+}
+
+.type-button.selected {
+    background-color: #dbdbdb;
+    box-shadow: inset 0 0 1px #737373;
+}
+
+.type-icon {
+    display: inline-block;
+    width: 66px;
+    margin-bottom: 4px;
+    background: #dbdbdb;
+    background-color: black;
+    border: 1px solid #a3a3a3;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, .2);
+    color: #fff;
+    font-size: .75rem;
+    font-weight: 400;
+    line-height: 1.5rem;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, .7);
+    text-transform: uppercase;
+    transition: opacity .4s
+}
+
+.type-icon:active,
+.type-icon:focus,
+.type-icon:hover {
+    color: #fff;
+    text-decoration: none
+}
+
+.type-icon:link:active,
+.type-icon:link:focus,
+.type-icon:link:hover {
+    opacity: .85
+}
+
+.type-normal {
+    background-color: #aa9
+}
+
+.type-fire {
+    background-color: #f42
+}
+
+.type-water {
+    background-color: #39f
+}
+
+.type-electric {
+    background-color: #fc3
+}
+
+.type-grass {
+    background-color: #7c5
+}
+
+.type-ice {
+    background-color: #6cf
+}
+
+.type-fighting {
+    background-color: #b54
+}
+
+.type-poison {
+    background-color: #a59
+}
+
+.type-ground {
+    background-color: #db5
+}
+
+.type-flying {
+    background-color: #89f
+}
+
+.type-psychic {
+    background-color: #f59
+}
+
+.type-bug {
+    background-color: #ab2
+}
+
+.type-rock {
+    background-color: #ba6
+}
+
+.type-ghost {
+    background-color: #66b
+}
+
+.type-dragon {
+    background-color: #76e
+}
+
+.type-dark {
+    background-color: #754
+}
+
+.type-steel {
+    background-color: #aab
+}
+
+.type-fairy {
+    background-color: #e9e
+}
+
+.type-aether {
+    background-color: #e0dcc9
+}
+
+.infos {
+    color: #a00;
+    text-align: center;
+}
+
+button {
+    padding: .5rem .75rem;
+    font: inherit;
+    cursor: pointer;
+    border: 1px solid #c2c2c2;
+    border-radius: 4px;
+    color: #404040;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, .6)
+}
+
+button:active {
+    outline: 0;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, .2)
+}
+
+button:focus {
+    outline: 0;
+    border-color: #a3a3a3;
+    background-color: #dbdbdb;
+}
+
+.stat-summary {
+    text-align: center
+}
+
+.stat-summary-item {
+    display: inline-block;
+    margin: 0 1rem 1rem;
+    font-size: .875rem
+}
+
+.stat-summary-count {
+    font-size: 1.5rem;
+    font-weight: 700
+}
+
+.infocard-list {
+    margin-bottom: 1rem
+}
+
+@supports (display:grid) {
+    .infocard-list {
+        display: grid;
+        grid-gap: .75rem;
+        grid-template-columns: repeat(auto-fill, minmax(82px, 1fr))
+    }
+}
+
+.pkmn-name {
+    font-size: .875rem
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<title>Pokémon Odyssey Type Coverage calculator</title>
+
+	<link rel="stylesheet" href="main.css">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Pokémon Odyssey Type Coverage calculator">
+
+	<script defer="defer" src="data.js"></script>
+	<script defer="defer" src="table-types.js"></script>
+	<script defer="defer" src="main.js"></script>
+</head>
+
+<body>
+	<main class="grid-container">
+		<h1 class="text-center">Pokémon Odyssey attack type coverage</h1>
+
+		<div class="explainations">
+			In <a href="https://www.pokecommunity.com/threads/pok%C3%A9mon-odyssey-complete-v4-1.488536/"
+				target="_blank">Pokémon Odyssey</a>,
+			<a href="https://docs.google.com/spreadsheets/d/1Es1clPMUhEEqZRHW0tgAmvxqSzVXiXmD" target="_blank">types are
+				modified</a>
+			: Poison is super effective on Water-types, Ice resists Psychic
+			and Dark and a new type Aether was added.
+			This tool, inspired by this <a href="https://pokemondb.net/tools/type-coverage" target="_blank">Pokémondb
+				tool</a>, lets you select types corresponding to the attacking moves of a Pokémon.
+			It then tells you how effective those types are on every Pokémon in Pokémon Odyssey.
+		</div>
+
+		<div class="type-select"></div>
+
+		<p class="infos">Ready to go! Select your types above then click Calculate.</p>
+
+		<p class="text-center">
+			<button id="calc-coverage">Calculate!</button>
+		</p>
+
+		<div class="stat-summary">
+			<div class="stat-summary-item">
+				<span class="stat-summary-count" id="total-immune">0</span><br>
+				<div class="tooltip">No Effect<span class="tooltiptext">x0</span></div>
+			</div>
+			<div class="stat-summary-item">
+				<span class="stat-summary-count" id="total-resisted">0</span><br>
+				<div class="tooltip">Not Very Effective<span class="tooltiptext">x0.25 or x0.5</span></div>
+			</div>
+			<div class="stat-summary-item">
+				<span class="stat-summary-count" id="total-normal">0</span><br>
+				<div class="tooltip">Normal Effective<span class="tooltiptext">x1</span></div>
+			</div>
+			<div class="stat-summary-item">
+				<span class="stat-summary-count" id="total-weak">0</span><br>
+				<div class="tooltip">Super Effective<span class="tooltiptext">x2 or x4</span></div>
+			</div>
+		</div>
+
+		<h2>No effect</h2>
+		<div id="pkmn-immune" class="infocard-list">
+			<p>None.</p>
+		</div>
+
+		<h2>Not very effective</h2>
+		<div id="pkmn-resisted" class="infocard-list">
+			<p>None.</p>
+		</div>
+
+		<h2>Normal effectiveness</h2>
+		<div id="pkmn-normal" class="infocard-list">
+			<p>None.</p>
+		</div>
+
+		<h2>Super effective</h2>
+		<div id="pkmn-weak" class="infocard-list">
+			<p>None.</p>
+		</div>
+
+	</main>
+</body>
+
+</html>
