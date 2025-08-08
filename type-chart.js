@@ -1,4 +1,4 @@
-// Gen 6-9 type table    
+// Gen 6-9 type chart    
 // typeTable = {
 //     "Normal": { "immunes": ["Ghost"], "resisted": ["Rock", "Steel"], "effective": [] },
 //     "Fighting": { "immunes": ["Ghost"], "resisted": ["Poison", "Flying", "Psychic", "Bug", "Fairy"], "effective": ["Normal", "Ice", "Rock", "Dark", "Steel"] },
@@ -20,7 +20,7 @@
 //     "Fairy": { "immunes": [], "resisted": ["Fire", "Poison", "Steel"], "effective": ["Fighting", "Dragon", "Dark"] }
 // };
 
-// Pokémon Odyssey type table
+// Pokémon Odyssey type chart
 typeTable = {
     "Normal": { "immunes": ["Ghost"], "resisted": ["Rock", "Steel"], "effective": [] },
     "Fighting": { "immunes": ["Ghost"], "resisted": ["Flying", "Poison", "Bug", "Psychic"], "effective": ["Normal", "Ice", "Rock", "Dark", "Steel"] },

@@ -15,6 +15,27 @@ function onDelegatedEvent(e, t, n, o, l) {
     for (let t in i) e.addEventListener(i[t], s, l)
 }
 
+// Preprocesses abilities
+// One entry per pokemon and ability (if the ability changes damage of a type)
+pkmnsWithAbilities = []
+pokemons.forEach(pkmn => {
+    if (pkmn.abilities.filter(a => !Object.keys(abilities).includes(a)).length > 0) {
+        p = { ...pkmn }
+        abilityDontChangeEff = pkmn.abilities.filter(a => !Object.keys(abilities).includes(a))
+        p.abilities = abilityDontChangeEff.reduce((x, y) => x + "/" + y)
+        p["count"] = abilityDontChangeEff.length / pkmn.abilities.length
+        p["typeMultiplier"] = {}
+        pkmnsWithAbilities.push(p)
+    }
+    for (ability of pkmn.abilities.filter(a => Object.keys(abilities).includes(a))) {
+        p = { ...pkmn }
+        p.abilities = ability
+        p["count"] = pkmn.abilities.filter(a => a == ability).length / pkmn.abilities.length
+        p["typeMultiplier"] = abilities[ability]
+        pkmnsWithAbilities.push(p)
+    }
+})
+
 // Fill the type lists
 typeListDiv = document.querySelector(".type-select")
 typeListDiv.innerHTML = Object.keys(typeTable).map(t => '<span class="type-button" data-typeid="' + t + '"><span class="type-icon type-' + t.toLowerCase() + '">' + t + '</span></span>').reduce((x, y) => x + y, "")
@@ -27,13 +48,15 @@ onDelegatedEvent(document.querySelector(".type-select"), ".type-button", "click"
     (function (e, t) { resetInfos(), t.classList.toggle("selected") }))
 
 function formatName(pkmn) {
-    return '<div class="pkmn-name tooltip">' + pkmn.name + '<span class="tooltiptext">' + pkmn.types.reduce((x, y) => x + "/" + y) + '</span></div>'
+    ability = pkmn.count && pkmn.count != 1 ? " (" + pkmn.abilities + ")" : ""
+    return '<div class="pkmn-name tooltip">' + pkmn.name + ability + '<span class="tooltiptext">' + pkmn.types.reduce((x, y) => x + "/" + y) + '</span></div>'
 }
 
 // Click on Calculate button
 onEvent(document.getElementById("calc-coverage"), "click", (function () {
     infos.textContent = "Calculating..."
     setTimeout((function () {
+        allowAbility = !document.querySelector("#ability").checked
         let t = document.getElementsByClassName("selected", document.querySelector(".type-select"))
         nbRes = { immune: document.getElementById("total-immune"), resist: document.getElementById("total-resisted"), normal: document.getElementById("total-normal"), weak: document.getElementById("total-weak") };
         pkmnRes = { immune: document.getElementById("pkmn-immune"), resist: document.getElementById("pkmn-resisted"), normal: document.getElementById("pkmn-normal"), weak: document.getElementById("pkmn-weak") };
@@ -42,8 +65,10 @@ onEvent(document.getElementById("calc-coverage"), "click", (function () {
             infos.textContent = "You must select at least 1 type!"
         } else {
             attTypes = Array.from(t).map(e => e.getAttribute("data-typeid"))
-            for (let pkmn of pokemons) {
-                finalEff = Math.max(...attTypes.map(att => pkmn.types.map(def => effectiveness(att, def)).reduce((x, y) => x * y, 1)))
+            for (let pkmn of allowAbility ? pkmnsWithAbilities : pokemons) {
+                finalEff = Math.max(...attTypes.map(att =>
+                    (pkmn["typeMultiplier"] && pkmn["typeMultiplier"][att] != undefined ? pkmn["typeMultiplier"][att] : 1) * pkmn.types.map(def => effectiveness(att, def)).reduce((x, y) => x * y, 1))
+                )
                 if (finalEff == 0) {
                     res.immune.push(pkmn)
                 } else if (finalEff == 1) {
@@ -56,12 +81,13 @@ onEvent(document.getElementById("calc-coverage"), "click", (function () {
             }
             resetInfos()
         }
-        for (let p of ["immune", "resist", "normal", "weak"]) {
-            nbRes[p].textContent = res[p].length
-            if (res[p].length == 0) {
-                pkmnRes[p].innerHTML = "None."
+        for (let r of ["immune", "resist", "normal", "weak"]) {
+            nb = res[r].map(p => p.count ?? 1).reduce((x, y) => x + y, 0)
+            nbRes[r].innerHTML = '<div class="tooltip">' + nb + '<span class="tooltiptext">' + Math.round(1000 * nb / pokemons.length) / 10 + '%</span></div>'
+            if (res[r].length == 0) {
+                pkmnRes[r].innerHTML = "None."
             } else {
-                pkmnRes[p].innerHTML = res[p].map(pkmn => formatName(pkmn)).reduce((x, y) => x + " " + y, "")
+                pkmnRes[r].innerHTML = res[r].map(p => formatName(p)).reduce((x, y) => x + " " + y, "")
             }
         }
     }), 10)

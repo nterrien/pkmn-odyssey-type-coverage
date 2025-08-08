@@ -5,4 +5,4 @@ A tool to know which Pokémon are weak or resistant to the selected type combo i
 Data from https://docs.google.com/spreadsheets/d/1Es1clPMUhEEqZRHW0tgAmvxqSzVXiXmD/edit
 
 ## Modify
-If you want to edit this tool for another game, the pokémon list is stored in data.js, and contains the pokemon name, types and abilities. The table type can be edited in table-types.js.
+If you want to edit this tool for another game, the pokémon list is stored in data.js, and contains the pokemon name, types and abilities. The type chart can be edited in type-chart.js. Ability that changes damage of a type (like Levitate or Dry Skin) can be added or changed in abilities.js.

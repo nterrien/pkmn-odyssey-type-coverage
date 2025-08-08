@@ -12,7 +12,8 @@
 	<meta property="og:title" content="Pokémon Odyssey Type Coverage calculator">
 
 	<script defer="defer" src="data.js"></script>
-	<script defer="defer" src="table-types.js"></script>
+	<script defer="defer" src="type-chart.js"></script>
+	<script defer="defer" src="abilities.js"></script>
 	<script defer="defer" src="main.js"></script>
 </head>
 
@@ -30,14 +31,16 @@
 			This tool, inspired by this <a href="https://pokemondb.net/tools/type-coverage" target="_blank">Pokémondb
 				tool</a>, lets you select types corresponding to the attacking moves of a Pokémon.
 			It then tells you how effective those types are on every Pokémon in Pokémon Odyssey.
+			If abilities aren't ignored, a Pokémon with multiple abilities, including one that grants immunity, can count as 0.5 in two different categories.
 		</div>
 
 		<div class="type-select"></div>
+		<p class="text-center"><label><input type="checkbox" name="ability" id="ability">&nbsp; Ignore abilities</label></p>
 
-		<p class="infos">Ready to go! Select your types above then click Calculate.</p>
+		<p class="infos">Select your types above then click Calculate.</p>
 
 		<p class="text-center">
-			<button id="calc-coverage">Calculate!</button>
+			<button id="calc-coverage">Calculate</button>
 		</p>
 
 		<div class="stat-summary">
@@ -81,5 +84,9 @@
 
 	</main>
 </body>
+
+<footer>
+	<a href="https://github.com/nterrien/pkmn-odyssey-type-coverage">Project page</a>
+</footer>
 
 </html>
