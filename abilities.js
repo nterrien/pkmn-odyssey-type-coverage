@@ -6,6 +6,7 @@ abilities = {
     "Heatproof": { "Fire": 0.5 },
     "Levitate": { "Ground": 0 },
     "Lightning Rod": { "Electric": 0 },
+    "Lightningrod": { "Electric": 0 },
     "Motor Drive": { "Electric": 0 },
     "Purifying Salt": { "Ghost": 0.5 },
     "Sap Sipper": { "Grass": 0 },
