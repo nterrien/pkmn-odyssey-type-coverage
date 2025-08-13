@@ -33,12 +33,12 @@ typeTable = {
     "Steel": { "immunes": [], "resisted": ["Fire", "Water", "Electric", "Steel"], "effective": ["Ice", "Rock"] },
     "Fire": { "immunes": [], "resisted": ["Fire", "Water", "Rock", "Dragon", "Aether"], "effective": ["Grass", "Ice", "Bug", "Steel"] },
     "Water": { "immunes": [], "resisted": ["Water", "Grass", "Dragon", "Aether"], "effective": ["Fire", "Ground", "Rock"] },
-    "Grass": { "immunes": [], "resisted": ["Fire", "Grass", "Poison", "Flying", "Bug", "Dragon", "Steel"], "effective": ["Water", "Ground", "Rock"] },
+    "Grass": { "immunes": [], "resisted": ["Fire", "Grass", "Flying", "Bug", "Dragon", "Steel"], "effective": ["Water", "Ground", "Rock"] },
     "Electric": { "immunes": ["Ground"], "resisted": ["Electric", "Grass", "Dragon"], "effective": ["Water", "Flying"] },
     "Psychic": { "immunes": ["Dark"], "resisted": ["Psychic", "Steel", "Ice"], "effective": ["Fighting", "Poison"] },
     "Ice": { "immunes": [], "resisted": ["Fire", "Water", "Ice", "Steel"], "effective": ["Grass", "Ground", "Flying", "Dragon"] },
     "Dragon": { "immunes": [], "resisted": ["Steel"], "effective": ["Dragon"] },
-    "Dark": { "immunes": [], "resisted": ["Fighting", "Dark", "Ice", "Aether"], "effective": ["Psychic", "Ghost"] },
+    "Dark": { "immunes": [], "resisted": ["Fighting", "Dark", "Ice"], "effective": ["Psychic", "Ghost", "Aether"] },
     "Aether": { "immunes": [], "resisted": ["Poison", "Dark", "Aether"], "effective": [] }
 };
 
