@@ -6,3 +6,8 @@ Data from https://docs.google.com/spreadsheets/d/1Es1clPMUhEEqZRHW0tgAmvxqSzVXiX
 
 ## Modify
 If you want to edit this tool for another game, the pokémon list is stored in data.js, and contains the pokemon name, types and abilities. The type chart can be edited in type-chart.js. Ability that changes damage of a type (like Levitate or Dry Skin) can be added or changed in abilities.js.
+
+## Copyrights
+Images and names of Pokémon are the property of Game Freak.
+
+Sprites of Etrian-pokémon are made by the Yggdrasil Project. The sprites can only be used for Pokémon Odyssey-related content.

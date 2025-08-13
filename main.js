@@ -49,7 +49,7 @@ onDelegatedEvent(document.querySelector(".type-select"), ".type-button", "click"
 
 function formatName(pkmn) {
     ability = pkmn.count && pkmn.count != 1 ? " (" + pkmn.abilities + ")" : ""
-    return '<div class="pkmn-name tooltip">' + pkmn.name + ability + '<span class="tooltiptext">' + pkmn.types.reduce((x, y) => x + "/" + y) + '</span></div>'
+    return '<div class="pkmn-name tooltip"><img width="48" height="48" alt="'+pkmn.name+' sprite" loading="lazy" src="./sprites/'+pkmn.name+'.png"><br>' + pkmn.name + ability + '<span class="tooltiptext">' + pkmn.types.reduce((x, y) => x + "/" + y) + '</span></div>'
 }
 
 // Click on Calculate button

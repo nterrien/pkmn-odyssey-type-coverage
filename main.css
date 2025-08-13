@@ -266,7 +266,8 @@ button:focus {
 }
 
 .pkmn-name {
-    font-size: .875rem
+    font-size: .875rem;
+    text-align: center;
 }
 
 .tooltip {
@@ -308,6 +309,6 @@ button:focus {
 }
 
 footer {
-    text-align: right;
+    text-align: center;
     font-size: 0.8rem;
 }
