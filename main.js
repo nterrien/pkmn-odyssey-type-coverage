@@ -59,18 +59,18 @@ function formatName(pkmn) {
 // Click on Calculate button
 onEvent(document.getElementById("calc-coverage"), "click", (function () {
     infos.textContent = "Calculating..."
+    const t = document.getElementsByClassName("selected", document.querySelector(".type-select"))
+    const types = Array.from(t).map(e => e.getAttribute("data-typeid"))
+    nbRes = { immune: document.getElementById("total-immune"), resist: document.getElementById("total-resisted"), normal: document.getElementById("total-normal"), weak: document.getElementById("total-weak") };
+    pkmnRes = { immune: document.getElementById("pkmn-immune"), resist: document.getElementById("pkmn-resisted"), normal: document.getElementById("pkmn-normal"), weak: document.getElementById("pkmn-weak") };
+    const allowAbility = !document.querySelector("#ability").checked
+    const finalEvo = document.querySelector("#final-evo").checked
+    const pokemonsFiltered = pokemons.filter(p => p.final || !finalEvo)
+    const pkmnsWithAbilitiesFilterd = pkmnsWithAbilities.filter(p => p.final || !finalEvo)
+    let res = { immune: [], resist: [], normal: [], weak: [] }
+    let averageEff = 0
+    chooseSubSetOptimized(types, allowAbility, pokemonsFiltered, pkmnsWithAbilitiesFilterd)
     setTimeout((function () {
-        const t = document.getElementsByClassName("selected", document.querySelector(".type-select"))
-        const types = Array.from(t).map(e => e.getAttribute("data-typeid"))
-        nbRes = { immune: document.getElementById("total-immune"), resist: document.getElementById("total-resisted"), normal: document.getElementById("total-normal"), weak: document.getElementById("total-weak") };
-        pkmnRes = { immune: document.getElementById("pkmn-immune"), resist: document.getElementById("pkmn-resisted"), normal: document.getElementById("pkmn-normal"), weak: document.getElementById("pkmn-weak") };
-        const allowAbility = !document.querySelector("#ability").checked
-        const finalEvo = document.querySelector("#final-evo").checked
-        const pokemonsFiltered = pokemons.filter(p => p.final || !finalEvo)
-        const pkmnsWithAbilitiesFilterd = pkmnsWithAbilities.filter(p => p.final || !finalEvo)
-        let res = { immune: [], resist: [], normal: [], weak: [] }
-        let averageEff = 0
-        chooseSubSetOptimized(types, allowAbility, pokemonsFiltered, pkmnsWithAbilitiesFilterd)
         if (types.length == 0) {
             infos.textContent = "You must select at least 1 type!"
         } else {
@@ -122,20 +122,37 @@ function chooseSubSetOptimized(types, allowAbility, pkmns, pkmnsWithAbilities) {
         document.getElementById("nbcombo").value = types.length
         nbCombo = types.length
     }
-    if (nbCombo) {
-        typesCombinaisons = findCombinaisons(types, nbCombo)
-        const result = []
-        for (let typesCombo of typesCombinaisons) {
-            result.push({ types: typesCombo, avg: calculateDamages(null, typesCombo, allowAbility, pkmns, pkmnsWithAbilities) })
-        }
-        result.sort((x, y) => y.avg - x.avg)
-        listRes = result.map(x => x.types.map(t => typeIcon(t)).join(" ") + ": x" + x.avg.toFixed(3)).slice(0, 10)
-        document.getElementById("comboResult").innerHTML = listRes.join("<br>")
-        document.getElementById("comboResult").classList.remove("hide")
-    } else {
-        document.getElementById("comboResult").innerHTML = null
-        document.getElementById("comboResult").classList.add("hide")
+    const typeCombiLength = binomialCoeff(nbCombo, types.length)
+    estimatedTime = 0.00000045 * typeCombiLength * nbCombo * pkmnsWithAbilities.length
+    if (estimatedTime > 0.9) {
+        infos.textContent = "Calculating " + typeCombiLength + " combos... It can take up to " + Math.round(estimatedTime * 10) / 10 + " seconds"
     }
+    setTimeout((function () {
+        if (nbCombo) {
+            typesCombinaisons = findCombinaisons(types, nbCombo)
+            const result = []
+            for (let typesCombo of typesCombinaisons) {
+                result.push({ types: typesCombo, avg: calculateDamages(null, typesCombo, allowAbility, pkmns, pkmnsWithAbilities) })
+            }
+            result.sort((x, y) => y.avg - x.avg)
+            listRes = result.map(x => x.types.map(t => typeIcon(t)).join(" ") + ": x" + x.avg.toFixed(3)).slice(0, 10)
+            document.getElementById("comboResult").innerHTML = listRes.join("<br>")
+            document.getElementById("comboResult").classList.remove("hide")
+        } else {
+            document.getElementById("comboResult").innerHTML = null
+            document.getElementById("comboResult").classList.add("hide")
+        }
+    }))
+}
+
+function binomialCoeff(k, n) {
+    return fact(n) / (fact(k) * fact(n - k))
+}
+function fact(n) {
+    if (n <= 1) {
+        return 1;
+    }
+    return n * fact(n - 1);
 }
 
 // From https://stackoverflow.com/a/42774126
