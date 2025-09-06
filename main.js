@@ -57,20 +57,23 @@ onEvent(document.getElementById("calc-coverage"), "click", (function () {
     infos.textContent = "Calculating..."
     setTimeout((function () {
         allowAbility = !document.querySelector("#ability").checked
+        finalEvo = document.querySelector("#final-evo").checked
         let t = document.getElementsByClassName("selected", document.querySelector(".type-select"))
         nbRes = { immune: document.getElementById("total-immune"), resist: document.getElementById("total-resisted"), normal: document.getElementById("total-normal"), weak: document.getElementById("total-weak") };
         pkmnRes = { immune: document.getElementById("pkmn-immune"), resist: document.getElementById("pkmn-resisted"), normal: document.getElementById("pkmn-normal"), weak: document.getElementById("pkmn-weak") };
         res = { immune: [], resist: [], normal: [], weak: [] };
         averageEff = 0
+        const pokemonsFiltered = pokemons.filter(p => p.final || !finalEvo)
+        const pkmnsWithAbilitiesFilterd = pkmnsWithAbilities.filter(p => p.final || !finalEvo)
         if (t.length == 0) {
             infos.textContent = "You must select at least 1 type!"
         } else {
             attTypes = Array.from(t).map(e => e.getAttribute("data-typeid"))
-            for (let pkmn of allowAbility ? pkmnsWithAbilities : pokemons) {
+            for (let pkmn of allowAbility ? pkmnsWithAbilitiesFilterd : pokemonsFiltered) {
                 finalEff = Math.max(...attTypes.map(att =>
                     (pkmn["typeMultiplier"] && pkmn["typeMultiplier"][att] != undefined ? pkmn["typeMultiplier"][att] : 1) * pkmn.types.map(def => effectiveness(att, def)).reduce((x, y) => x * y, 1))
                 )
-                averageEff += (pkmn.count?? 1) * finalEff / pokemons.length
+                averageEff += (pkmn.count ?? 1) * finalEff / pokemonsFiltered.length
                 if (finalEff == 0) {
                     res.immune.push(pkmn)
                 } else if (finalEff == 1) {
@@ -85,14 +88,14 @@ onEvent(document.getElementById("calc-coverage"), "click", (function () {
         }
         for (let r of ["immune", "resist", "normal", "weak"]) {
             nb = res[r].map(p => p.count ?? 1).reduce((x, y) => x + y, 0)
-            nbRes[r].innerHTML = '<div class="tooltip">' + nb + '<span class="tooltiptext">' + Math.round(1000 * nb / pokemons.length) / 10 + '%</span></div>'
+            nbRes[r].innerHTML = '<div class="tooltip">' + nb + '<span class="tooltiptext">' + Math.round(1000 * nb / pokemonsFiltered.length) / 10 + '%</span></div>'
             if (res[r].length == 0) {
                 pkmnRes[r].innerHTML = "None."
             } else {
                 pkmnRes[r].innerHTML = res[r].map(p => formatName(p)).reduce((x, y) => x + " " + y, "")
             }
         }
-        document.getElementById("average").innerHTML = "x" +  Math.round(100 * averageEff)/100
+        document.getElementById("average").innerHTML = "x" + Math.round(100 * averageEff) / 100
     }), 10)
 }))
 
