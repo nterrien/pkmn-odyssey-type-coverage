@@ -122,6 +122,7 @@ function chooseSubSetOptimized(types, allowAbility, pkmns, pkmnsWithAbilities) {
         document.getElementById("nbcombo").value = types.length
         nbCombo = types.length
     }
+    let criteria = document.getElementById("criteria").value
     const typeCombiLength = binomialCoeff(nbCombo, types.length)
     estimatedTime = 0.00000045 * typeCombiLength * nbCombo * pkmnsWithAbilities.length
     if (estimatedTime > 0.9) {
@@ -130,12 +131,35 @@ function chooseSubSetOptimized(types, allowAbility, pkmns, pkmnsWithAbilities) {
     setTimeout((function () {
         if (nbCombo) {
             typesCombinaisons = findCombinaisons(types, nbCombo)
-            const result = []
+            let result = []
             for (let typesCombo of typesCombinaisons) {
-                result.push({ types: typesCombo, avg: calculateDamages(null, typesCombo, allowAbility, pkmns, pkmnsWithAbilities) })
+                let res = { immune: [], resist: [], normal: [], weak: [] }
+                const avg = calculateDamages(res, typesCombo, allowAbility, pkmns, pkmnsWithAbilities)
+                switch (criteria) {
+                    case "average":
+                        result.push({ types: typesCombo, value: avg })
+                        break;
+                    case "most-super":
+                        result.push({ types: typesCombo, value: res.weak.map(r => r.count ?? 1).reduce((x, y) => x + y, 0) })
+                        break;
+                    case "less-res":
+                        result.push({ types: typesCombo, value: res.immune.concat(res.resist).map(r => r.count ?? 1).reduce((x, y) => x + y, 0) })
+                        break;
+                }
             }
-            result.sort((x, y) => y.avg - x.avg)
-            listRes = result.map(x => x.types.map(t => typeIcon(t)).join(" ") + ": x" + x.avg.toFixed(3)).slice(0, 10)
+            switch (criteria) {
+                case "average":
+                    result.sort((x, y) => y.value - x.value)
+                    result = result.map(x => { return { types: x.types, value: "x" + x.value.toFixed(3) } })
+                    break;
+                case "most-super":
+                    result.sort((x, y) => y.value - x.value)
+                    break;
+                case "less-res":
+                    result.sort((x, y) => x.value - y.value)
+                    break;
+            }
+            listRes = result.map(x => x.types.map(t => typeIcon(t)).join(" ") + ": " + x.value).slice(0, 10)
             document.getElementById("comboResult").innerHTML = listRes.join("<br>")
             document.getElementById("comboResult").classList.remove("hide")
         } else {

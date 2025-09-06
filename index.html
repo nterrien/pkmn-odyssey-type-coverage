@@ -36,8 +36,9 @@
 			If abilities aren't ignored, a Pokémon with multiple abilities, including one that grants immunity, can
 			count as 0.5 in two different categories.
 			"Fully Evolved Only" allows to ignore Pokémon that aren't fully evolved.
-			"Find best combos of x types" can be used to find types combo with the best multiplier on average. If blank
-			it is not used.
+			"Find best combos of x types" can be used to find types combo with the best multiplier on average, the less
+			resistance or the most super efficient.
+			If blank it is not used.
 		</div>
 
 		<div class="type-select"></div>
@@ -47,8 +48,15 @@
 		</p>
 		<p class="text-center">
 			<label>Find best combos of x types: <input id="nbcombo" type="number" min="0" max="18"></label>
-			<p class="text-center hide" id="comboResult"></p>
+			<label>Criteria
+				<select id="criteria">
+					<option value="average" selected>Average</option>
+					<option value="most-super">Most super effective</option>
+					<option value="less-res">Less resisted</option>
+				</select>
+			</label>
 		</p>
+		<p class="text-center hide" id="comboResult"></p>
 
 		<p class="infos">Select your types above then click Calculate.</p>
 
