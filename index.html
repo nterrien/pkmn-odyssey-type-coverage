@@ -35,12 +35,19 @@
 			<a href="https://nterrien.github.io/pkmn-odyssey-teambuilder/" target="_blank">with this teambuilder</a>.
 			If abilities aren't ignored, a Pokémon with multiple abilities, including one that grants immunity, can
 			count as 0.5 in two different categories.
+			"Fully Evolved Only" allows to ignore Pokémon that aren't fully evolved.
+			"Find best combos of x types" can be used to find types combo with the best multiplier on average. If blank
+			it is not used.
 		</div>
 
 		<div class="type-select"></div>
 		<p class="text-center">
 			<label><input type="checkbox" name="ability" id="ability">&nbsp; Ignore abilities</label>
 			<label><input type="checkbox" name="final-evo" id="final-evo">&nbsp; Fully Evolved Only</label>
+		</p>
+		<p class="text-center">
+			<label>Find best combos of x types: <input id="nbcombo" type="number" min="0" max="18"></label>
+			<p class="text-center hide" id="comboResult"></p>
 		</p>
 
 		<p class="infos">Select your types above then click Calculate.</p>
