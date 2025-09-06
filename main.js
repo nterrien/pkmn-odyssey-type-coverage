@@ -49,7 +49,7 @@ onDelegatedEvent(document.querySelector(".type-select"), ".type-button", "click"
 
 function formatName(pkmn) {
     ability = pkmn.count && pkmn.count != 1 ? " (" + pkmn.abilities + ")" : ""
-    return '<div class="pkmn-name tooltip"><img width="48" height="48" alt="'+pkmn.name+' sprite" title="' + pkmn.name + '" loading="lazy" src="./sprites/'+pkmn.name+'.png"><br>' + pkmn.name + ability + '<span class="tooltiptext">' + pkmn.types.reduce((x, y) => x + "/" + y) + '</span></div>'
+    return '<div class="pkmn-name tooltip"><img width="48" height="48" alt="' + pkmn.name + ' sprite" title="' + pkmn.name + '" loading="lazy" src="./sprites/' + pkmn.name + '.png"><br>' + pkmn.name + ability + '<span class="tooltiptext">' + pkmn.types.reduce((x, y) => x + "/" + y) + '</span></div>'
 }
 
 // Click on Calculate button
@@ -61,6 +61,7 @@ onEvent(document.getElementById("calc-coverage"), "click", (function () {
         nbRes = { immune: document.getElementById("total-immune"), resist: document.getElementById("total-resisted"), normal: document.getElementById("total-normal"), weak: document.getElementById("total-weak") };
         pkmnRes = { immune: document.getElementById("pkmn-immune"), resist: document.getElementById("pkmn-resisted"), normal: document.getElementById("pkmn-normal"), weak: document.getElementById("pkmn-weak") };
         res = { immune: [], resist: [], normal: [], weak: [] };
+        averageEff = 0
         if (t.length == 0) {
             infos.textContent = "You must select at least 1 type!"
         } else {
@@ -69,6 +70,7 @@ onEvent(document.getElementById("calc-coverage"), "click", (function () {
                 finalEff = Math.max(...attTypes.map(att =>
                     (pkmn["typeMultiplier"] && pkmn["typeMultiplier"][att] != undefined ? pkmn["typeMultiplier"][att] : 1) * pkmn.types.map(def => effectiveness(att, def)).reduce((x, y) => x * y, 1))
                 )
+                averageEff += (pkmn.count?? 1) * finalEff / pokemons.length
                 if (finalEff == 0) {
                     res.immune.push(pkmn)
                 } else if (finalEff == 1) {
@@ -90,6 +92,7 @@ onEvent(document.getElementById("calc-coverage"), "click", (function () {
                 pkmnRes[r].innerHTML = res[r].map(p => formatName(p)).reduce((x, y) => x + " " + y, "")
             }
         }
+        document.getElementById("average").innerHTML = "x" +  Math.round(100 * averageEff)/100
     }), 10)
 }))
 
