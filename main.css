@@ -219,6 +219,10 @@ h2 {
     padding: 7px;
 }
 
+#comboResult>div {
+    text-align: left;
+}
+
 .hide {
     display: none;
 }

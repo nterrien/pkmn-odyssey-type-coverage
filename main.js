@@ -182,8 +182,8 @@ function chooseSubSetOptimized(types, allowAbility, pkmns, pkmnsWithAbilities) {
                     result = result.map(x => { return { types: x.types, value: roundDecimal(x.resist, 2) } })
                     break;
             }
-            listRes = result.map(x => x.types.map(t => typeIcon(t)).join(" ") + ": " + x.value).slice(0, 10)
-            document.getElementById("comboResult").innerHTML = listRes.join("<br>")
+            listRes = result.map(x => "<div>" + x.types.map(t => typeIcon(t)).join(" ") + ": " + x.value + "</div>").slice(0, 10)
+            document.getElementById("comboResult").innerHTML = listRes.join("")
             document.getElementById("comboResult").classList.remove("hide")
         }
     }))
