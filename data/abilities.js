@@ -16,8 +16,17 @@ abilities = {
     "Water Absorb": { "Water": 0 },
     "Water Bubble": { "Fire": 0.5 },
     "Well-Baked Body": { "Fire": 0 },
-    // It doesn't really works like that but it works if Shedinja type is unchanged and if it is the only one with this ability
-    "Wonder Guard": { "Normal": 0, "Fighting": 0, "Poison": 0, "Ground": 0, "Bug": 0, "Steel": 0, "Water": 0, "Grass": 0, "Electric": 0, "Psychic": 0, "Ice": 0, "Dragon": 0, "Fairy": 0 },
+    "Solid Rock": { "special": reduceIfEffective },
+    "Filter": { "special": reduceIfEffective },
+    "Prism Armor": { "special": reduceIfEffective },
+    "Wonder Guard": { "special": wonderGuard },
 }
 
+function reduceIfEffective(mult) {
+    return mult < 2 ? mult : 3 / 4 * mult
+}
+
+function wonderGuard(mult) {
+    return mult < 2 ? 0 : mult
+}
 

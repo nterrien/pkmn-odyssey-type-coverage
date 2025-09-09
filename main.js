@@ -79,7 +79,7 @@ onEvent(document.getElementById("calc-coverage"), "click", (function () {
         }
         for (let r of Object.keys(res)) {
             nb = res[r].map(p => p.count ?? 1).reduce((x, y) => x + y, 0)
-            nbRes[r].innerHTML = '<div class="tooltip">' + nb + '<span class="tooltiptext">' + Math.round(1000 * nb / pokemonsFiltered.length) / 10 + '%</span></div>'
+            nbRes[r].innerHTML = '<div class="tooltip">' + Math.round(100 * nb) / 100 + '<span class="tooltiptext">' + Math.round(1000 * nb / pokemonsFiltered.length) / 10 + '%</span></div>'
             if (res[r].length == 0) {
                 pkmnRes[r].innerHTML = "None."
             } else {
@@ -90,12 +90,20 @@ onEvent(document.getElementById("calc-coverage"), "click", (function () {
     }), 10)
 }))
 
+function damageMultiplierOnePokemon(pkmn, types) {
+    finalEff = Math.max(...types.map(att =>
+        (pkmn["typeMultiplier"] && pkmn["typeMultiplier"][att] != undefined ? pkmn["typeMultiplier"][att] : 1) * pkmn.types.map(def => effectiveness(att, def)).reduce((x, y) => x * y, 1))
+    )
+    if (pkmn["typeMultiplier"] && pkmn["typeMultiplier"]["special"]) {
+        finalEff = pkmn["typeMultiplier"]["special"](finalEff)
+    }
+    return finalEff
+}
+
 function calculateDamages(res, types, allowAbility, pkmns, pkmnsWithAbilities) {
     averageEff = 0;
     for (let pkmn of allowAbility ? pkmnsWithAbilities : pkmns) {
-        finalEff = Math.max(...types.map(att =>
-            (pkmn["typeMultiplier"] && pkmn["typeMultiplier"][att] != undefined ? pkmn["typeMultiplier"][att] : 1) * pkmn.types.map(def => effectiveness(att, def)).reduce((x, y) => x * y, 1))
-        )
+        finalEff = damageMultiplierOnePokemon(pkmn, types)
         averageEff += (pkmn.count ?? 1) * finalEff / pkmns.length
         if (res) {
             if (finalEff == 0) {
