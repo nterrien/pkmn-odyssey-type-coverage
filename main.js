@@ -79,31 +79,33 @@ onEvent(document.getElementById("calc-coverage"), "click", (function () {
         }
         for (let r of Object.keys(res)) {
             nb = res[r].map(p => p.count ?? 1).reduce((x, y) => x + y, 0)
-            nbRes[r].innerHTML = '<div class="tooltip">' + Math.round(100 * nb) / 100 + '<span class="tooltiptext">' + Math.round(1000 * nb / pokemonsFiltered.length) / 10 + '%</span></div>'
+            nbRes[r].innerHTML = '<div class="tooltip">' + roundDecimal(nb, 2) + '<span class="tooltiptext">' + roundDecimal(100 * nb / pokemonsFiltered.length, 1) + '%</span></div>'
             if (res[r].length == 0) {
                 pkmnRes[r].innerHTML = "None."
             } else {
                 pkmnRes[r].innerHTML = res[r].map(p => formatName(p)).reduce((x, y) => x + " " + y, "")
             }
         }
-        document.getElementById("average").innerHTML = "x" + Math.round(100 * averageEff) / 100
+        document.getElementById("average").innerHTML = "x" + roundDecimal(averageEff, 2)
     }), 10)
 }))
 
-function damageMultiplierOnePokemon(pkmn, types) {
-    finalEff = Math.max(...types.map(att =>
-        (pkmn["typeMultiplier"] && pkmn["typeMultiplier"][att] != undefined ? pkmn["typeMultiplier"][att] : 1) * pkmn.types.map(def => effectiveness(att, def)).reduce((x, y) => x * y, 1))
-    )
-    if (pkmn["typeMultiplier"] && pkmn["typeMultiplier"]["special"]) {
-        finalEff = pkmn["typeMultiplier"]["special"](finalEff)
+function damageMultiplierOnePokemon(pkmn, att) {
+    let ability = 1
+    if (pkmn["typeMultiplier"] && pkmn["typeMultiplier"][att] != undefined) {
+        ability = pkmn["typeMultiplier"][att]
     }
-    return finalEff
+    damage = ability * pkmn.types.map(def => effectiveness(att, def)).reduce((x, y) => x * y, 1)
+    if (pkmn["typeMultiplier"] && pkmn["typeMultiplier"]["special"]) {
+        damage = pkmn["typeMultiplier"]["special"](damage)
+    }
+    return damage
 }
 
 function calculateDamages(res, types, allowAbility, pkmns, pkmnsWithAbilities) {
     averageEff = 0;
     for (let pkmn of allowAbility ? pkmnsWithAbilities : pkmns) {
-        finalEff = damageMultiplierOnePokemon(pkmn, types)
+        finalEff = Math.max(...types.map(att => damageMultiplierOnePokemon(pkmn, att)))
         averageEff += (pkmn.count ?? 1) * finalEff / pkmns.length
         if (res) {
             if (finalEff == 0) {
@@ -134,7 +136,7 @@ function chooseSubSetOptimized(types, allowAbility, pkmns, pkmnsWithAbilities) {
     const typeCombiLength = binomialCoeff(nbCombo, types.length)
     estimatedTime = 0.00000045 * typeCombiLength * nbCombo * pkmnsWithAbilities.length
     if (estimatedTime > 0.9) {
-        infos.textContent = "Calculating " + typeCombiLength + " combos... It can take up to " + Math.round(estimatedTime * 10) / 10 + " seconds"
+        infos.textContent = "Calculating " + typeCombiLength + " combos... It can take up to " + roundDecimal(estimatedTime, 1) + " seconds"
     }
     setTimeout((function () {
         if (nbCombo) {
@@ -143,28 +145,28 @@ function chooseSubSetOptimized(types, allowAbility, pkmns, pkmnsWithAbilities) {
             for (let typesCombo of typesCombinaisons) {
                 let res = { immune: [], resist: [], normal: [], weak: [] }
                 const avg = calculateDamages(res, typesCombo, allowAbility, pkmns, pkmnsWithAbilities)
-                switch (criteria) {
-                    case "average":
-                        result.push({ types: typesCombo, value: avg })
-                        break;
-                    case "most-super":
-                        result.push({ types: typesCombo, value: res.weak.map(r => r.count ?? 1).reduce((x, y) => x + y, 0) })
-                        break;
-                    case "less-res":
-                        result.push({ types: typesCombo, value: res.immune.concat(res.resist).map(r => r.count ?? 1).reduce((x, y) => x + y, 0) })
-                        break;
-                }
+                result.push({
+                    types: typesCombo,
+                    avg: avg,
+                    weak: res.weak.map(r => r.count ?? 1).reduce((x, y) => x + y, 0),
+                    resist: res.immune.concat(res.resist).map(r => r.count ?? 1).reduce((x, y) => x + y, 0)
+                })
             }
             switch (criteria) {
                 case "average":
-                    result.sort((x, y) => y.value - x.value)
-                    result = result.map(x => { return { types: x.types, value: "x" + x.value.toFixed(3) } })
+                    // Sort primary: avg, secondary: less res, tertiary: most super
+                    result.sort((x, y) => y.avg == x.avg ? (y.resist == x.resist ? y.weak - x.weak : x.resist - y.resist) : y.avg - x.avg)
+                    result = result.map(x => { return { types: x.types, value: "x" + x.avg.toFixed(3) } })
                     break;
                 case "most-super":
-                    result.sort((x, y) => y.value - x.value)
+                    // Sort primary: most super, secondary: avg, tertiary: less res
+                    result.sort((x, y) => y.weak == x.weak ? (y.avg == x.avg ? x.resist - y.resist : y.avg - x.avg) : y.weak - x.weak)
+                    result = result.map(x => { return { types: x.types, value: roundDecimal(x.weak, 2) } })
                     break;
                 case "less-res":
-                    result.sort((x, y) => x.value - y.value)
+                    // Sort primary: less res, secondary: avg, tertiary: most super
+                    result.sort((x, y) => y.resist == x.resist ? (y.avg == x.avg ? y.weak - x.weak : y.avg - x.avg) : x.resist - y.resist)
+                    result = result.map(x => { return { types: x.types, value: roundDecimal(x.resist, 2) } })
                     break;
             }
             listRes = result.map(x => x.types.map(t => typeIcon(t)).join(" ") + ": " + x.value).slice(0, 10)
@@ -185,6 +187,9 @@ function fact(n) {
         return 1;
     }
     return n * fact(n - 1);
+}
+function roundDecimal(nb, decimal) {
+    return Math.round((10 ** decimal) * nb) / (10 ** decimal)
 }
 
 // From https://stackoverflow.com/a/42774126
