@@ -83,7 +83,18 @@ onEvent(document.getElementById("calc-coverage"), "click", (function () {
             if (res[r].length == 0) {
                 pkmnRes[r].innerHTML = "None."
             } else {
-                pkmnRes[r].innerHTML = res[r].map(p => formatName(p)).reduce((x, y) => x + " " + y, "")
+                // Regroup pokémon by name (to avoid having two pokémon in the same category with different abilities
+                // (for exemple Hariyama (Guts) and Hariyama (Thick Fat) when the type is Psychic)
+                pkmnByName = new Map()
+                res[r].forEach(p => {
+                    if (pkmnByName.has(p.name)) {
+                        pkmnByName.get(p.name).count += p.count
+                        pkmnByName.get(p.name).abilities += "/" + p.abilities
+                    } else {
+                        pkmnByName.set(p.name, { ...p })
+                    }
+                })
+                pkmnRes[r].innerHTML = pkmnByName.values().map(p => formatName(p)).reduce((x, y) => x + " " + y, "")
             }
         }
         document.getElementById("average").innerHTML = "x" + roundDecimal(averageEff, 2)
@@ -138,9 +149,11 @@ function chooseSubSetOptimized(types, allowAbility, pkmns, pkmnsWithAbilities) {
     if (estimatedTime > 0.9) {
         infos.textContent = "Calculating " + typeCombiLength + " combos... It can take up to " + roundDecimal(estimatedTime, 1) + " seconds"
     }
+    document.getElementById("comboResult").innerHTML = null
+    document.getElementById("comboResult").classList.add("hide")
     setTimeout((function () {
         if (nbCombo) {
-            typesCombinaisons = findCombinaisons(types, nbCombo)
+            const typesCombinaisons = findCombinaisons(types, nbCombo)
             let result = []
             for (let typesCombo of typesCombinaisons) {
                 let res = { immune: [], resist: [], normal: [], weak: [] }
@@ -172,9 +185,6 @@ function chooseSubSetOptimized(types, allowAbility, pkmns, pkmnsWithAbilities) {
             listRes = result.map(x => x.types.map(t => typeIcon(t)).join(" ") + ": " + x.value).slice(0, 10)
             document.getElementById("comboResult").innerHTML = listRes.join("<br>")
             document.getElementById("comboResult").classList.remove("hide")
-        } else {
-            document.getElementById("comboResult").innerHTML = null
-            document.getElementById("comboResult").classList.add("hide")
         }
     }))
 }
