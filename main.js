@@ -40,6 +40,11 @@ pokemons.forEach(pkmn => {
 typeListDiv = document.querySelector(".type-select")
 typeListDiv.innerHTML = Object.keys(typeTable).map(t => '<span class="type-button" data-typeid="' + t + '">' + typeIcon(t) + '</span>').reduce((x, y) => x + y, "")
 
+for (let i = 1; i <= 2; i++) {
+    forceType = document.getElementById("force-type-" + i)
+    forceType.innerHTML = '<option value="None" selected></option>' + Object.keys(typeTable).map(t => '<option value="' + t + '">' + t + '</option>').reduce((x, y) => x + y, "")
+}
+
 function typeIcon(t) {
     return '<span class="type-icon type-' + t.toLowerCase() + '">' + t + '</span>'
 }
@@ -149,6 +154,18 @@ function chooseSubSetOptimized(types, allowAbility, pkmns, pkmnsWithAbilities, s
         nbCombo = types.length
     }
     let criteria = document.getElementById("criteria").value
+    let forcedTypes = []
+    for (let i = 1; i <= 2; i++) {
+        const forcedType = document.getElementById("force-type-" + i).value
+        if (forcedType != 'None') {
+            if (forcedTypes.includes(forcedType) || !types.includes(forcedType) || forcedTypes.length + 1 > nbCombo) {
+                document.getElementById("force-type-" + i).value = 'None'
+            } else {
+                forcedTypes.push(document.getElementById("force-type-" + i).value)
+            }
+        }
+    }
+    nbCombo -= forcedTypes.length
     const typeCombiLength = binomialCoeff(nbCombo, types.length)
     estimatedTime = 0.00000045 * typeCombiLength * nbCombo * pkmnsWithAbilities.length
     if (estimatedTime > 0.9) {
@@ -157,8 +174,10 @@ function chooseSubSetOptimized(types, allowAbility, pkmns, pkmnsWithAbilities, s
     document.getElementById("comboResult").innerHTML = null
     document.getElementById("comboResult").classList.add("hide")
     setTimeout((function () {
-        if (nbCombo) {
-            const typesCombinaisons = findCombinaisons(types, nbCombo)
+        if (nbCombo || forcedTypes.length > 0) {
+            const typesWithoutForced = types.filter(t => !forcedTypes.includes(t))
+            const typesCombinaisons = findCombinaisons(typesWithoutForced, nbCombo)
+            forcedTypes.reverse().forEach(t => typesCombinaisons.forEach(tc => tc.unshift(t)))
             let typesComboValues = []
             for (let typesCombo of typesCombinaisons) {
                 let res = { immune: [], resist: [], normal: [], weak: [] }
