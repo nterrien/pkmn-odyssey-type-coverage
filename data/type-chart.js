@@ -42,10 +42,10 @@ typeTable = {
     "Aether": { "immunes": [], "resisted": ["Poison", "Dark", "Aether"], "effective": [] }
 };
 
-function effectiveness(typeA, typeD, hasScrappy) {
+function effectiveness(typeA, typeD, special) {
     e = typeTable[typeA];
-    // Special for Scrappy/Mind's Eye. Could be extended if other offensives abilties change the type table 
-    if (hasScrappy && typeD == "Ghost" && (typeA == "Normal" || typeA == "Fighting")) {
+    // Special for Scrappy. Could be extended if other offensives abilties change the type table 
+    if (special["scrappy"] && typeD == "Ghost" && (typeA == "Normal" || typeA == "Fighting")) {
         return 1
     }
     if (e["immunes"].includes(typeD)) {
