@@ -207,7 +207,7 @@ function chooseSubSetOptimized(types, allowAbility, pkmns, pkmnsWithAbilities, s
                     break;
             }
             console.log("Full list of types combo: ", typesComboValues)
-            listRes = result.map(x => "<div>" + x.types.map(t => typeIcon(t)).join(" ") + ": " + x.value + "</div>").slice(0, 10)
+            listRes = result.map(x => "<div>" + x.types.map(t => typeIcon(t)).join(" ") + ": <div class=\"tooltip\">" + x.value + (criteria != "average" ? "<span class=\"tooltiptext\">" + roundDecimal(100 * x.value / pkmns.length, 2) + "%</span>" : "") + "</div></div>").slice(0, 10)
             document.getElementById("comboResult").innerHTML = listRes.join("")
             document.getElementById("comboResult").classList.remove("hide")
         }
