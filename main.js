@@ -207,11 +207,24 @@ function chooseSubSetOptimized(types, allowAbility, pkmns, pkmnsWithAbilities, s
                     break;
             }
             console.log("Full list of types combo: ", typesComboValues)
-            listRes = result.map(x => "<div>" + x.types.map(t => typeIcon(t)).join(" ") + ": <div class=\"tooltip\">" + x.value + (criteria != "average" ? "<span class=\"tooltiptext\">" + roundDecimal(100 * x.value / pkmns.length, 2) + "%</span>" : "") + "</div></div>").slice(0, 10)
-            document.getElementById("comboResult").innerHTML = listRes.join("")
+            listRes = result.slice(0, 10).forEach(x => {
+                div = document.createElement("div")
+                div.addEventListener("click", () => selectTypeList(x.types))
+                div.innerHTML = "<div style=\"cursor: pointer\" class=\"tooltip\">" + x.types.map(t => typeIcon(t)).join(" ") + "<span class=\"tooltiptext\">Click to select this type combo<span></div>: <div class=\"tooltip\">" + x.value + (criteria != "average" ? "<span class=\"tooltiptext\">" + roundDecimal(100 * x.value / pkmns.length, 2) + "%</span>" : "") + "</div>"
+                document.getElementById("comboResult").appendChild(div)
+            })
             document.getElementById("comboResult").classList.remove("hide")
         }
     }))
+}
+
+function selectTypeList(types) {
+    resetInfos()
+    const selectedTypes = document.getElementsByClassName("selected", document.querySelector(".type-select"))
+    Array.from(selectedTypes).forEach(t => t.classList.toggle("selected"))
+    Array.from(document.getElementsByClassName("type-button", document.querySelector(".type-select"))).filter(t => types.includes(t.dataset.typeid)).forEach(t => t.classList.toggle("selected"))
+    document.getElementById("nbcombo").value = null
+    document.getElementById("calc-coverage").click()
 }
 
 function binomialCoeff(k, n) {
