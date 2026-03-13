@@ -257,3 +257,17 @@ function findCombinaisons(array, nb) {
     fork(0, []);
     return result.filter(r => r.length == nb);
 }
+
+/* Alt + A to un/select all types */
+function keyUpToggleAll(e) {
+    if (e.altKey && e.which == 65) {
+        selectedTypes = document.getElementsByClassName("selected", document.querySelector(".type-select"))
+        allTypes = Object.keys(typeTable)
+        if (selectedTypes.length == allTypes.length) {
+            selectTypeList([])
+        } else {
+            selectTypeList(allTypes)
+        }
+    }
+}
+document.addEventListener('keyup', keyUpToggleAll, false);
