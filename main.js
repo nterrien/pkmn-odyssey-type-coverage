@@ -19,19 +19,22 @@ function onDelegatedEvent(e, t, n, o, l) {
 // One entry per pokemon and ability (if the ability changes damage of a type)
 pkmnsWithAbilities = []
 pokemons.forEach(pkmn => {
-    if (pkmn.abilities.filter(a => !Object.keys(abilities).includes(a)).length > 0) {
+    abilitiesChangeMult = Object.keys(abilities).concat(Object.keys(weathers))
+    if (pkmn.abilities.filter(a => !abilitiesChangeMult.includes(a)).length > 0) {
         p = { ...pkmn }
-        abilityDontChangeEff = pkmn.abilities.filter(a => !Object.keys(abilities).includes(a))
+        abilityDontChangeEff = pkmn.abilities.filter(a => !abilitiesChangeMult.includes(a))
         p.abilities = abilityDontChangeEff.reduce((x, y) => x + "/" + y)
         p["count"] = abilityDontChangeEff.length / pkmn.abilities.length
         p["typeMultiplier"] = {}
+        p["weatherMultiplier"] = {}
         pkmnsWithAbilities.push(p)
     }
-    for (ability of pkmn.abilities.filter(a => Object.keys(abilities).includes(a))) {
+    for (ability of pkmn.abilities.filter(a => abilitiesChangeMult.includes(a))) {
         p = { ...pkmn }
         p.abilities = ability
         p["count"] = pkmn.abilities.filter(a => a == ability).length / pkmn.abilities.length
-        p["typeMultiplier"] = abilities[ability]
+        p["typeMultiplier"] = abilities[ability] ?? {}
+        p["weatherMultiplier"] = weathers[ability] ?? {}
         pkmnsWithAbilities.push(p)
     }
 })
@@ -70,7 +73,7 @@ onEvent(document.getElementById("calc-coverage"), "click", (function () {
     pkmnRes = { immune: document.getElementById("pkmn-immune"), resist: document.getElementById("pkmn-resisted"), normal: document.getElementById("pkmn-normal"), weak: document.getElementById("pkmn-weak") };
     const allowAbility = !document.querySelector("#ability").checked
     const finalEvo = document.querySelector("#final-evo").checked
-    const specialRules = { "scrappy": document.querySelector("#scrappy").checked, "tintedlens": document.querySelector("#tintedlens").checked }
+    const specialRules = { "weather": document.querySelector("#weather").checked, "scrappy": document.querySelector("#scrappy").checked, "tintedlens": document.querySelector("#tintedlens").checked }
     const pokemonsFiltered = pokemons.filter(p => p.final || !finalEvo)
     const pkmnsWithAbilitiesFilterd = pkmnsWithAbilities.filter(p => p.final || !finalEvo)
     let res = { immune: [], resist: [], normal: [], weak: [] }
@@ -116,11 +119,14 @@ function damageMultiplierOnePokemon(pkmn, att, specialRules) {
     if (specialRules["tintedlens"] && typeEffectivness < 1) {
         typeEffectivness *= 2
     }
-    damage = ability * typeEffectivness
     if (pkmn["typeMultiplier"] && pkmn["typeMultiplier"]["special"]) {
-        damage = pkmn["typeMultiplier"]["special"](damage)
+        ability *= pkmn["typeMultiplier"]["special"](typeEffectivness)
     }
-    return damage
+    let weatherMult = 1
+    if (specialRules["weather"] && pkmn["weatherMultiplier"] && pkmn["weatherMultiplier"][att] != undefined) {
+        weatherMult *= pkmn["weatherMultiplier"][att]
+    }
+    return ability * typeEffectivness * weatherMult
 }
 
 function calculateDamages(res, types, allowAbility, pkmns, pkmnsWithAbilities, specialRules) {

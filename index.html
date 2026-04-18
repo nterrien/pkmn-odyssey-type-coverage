@@ -44,6 +44,9 @@
 		<div class="type-select"></div>
 		<p class="text-center">
 			<label><input type="checkbox" name="ability" id="ability">&nbsp; Ignore abilities</label>
+			<label class="tooltip"><input type="checkbox" name="weather" id="weather">&nbsp; Include Weather abilities
+				<span class="tooltiptext">Include weather summoned by abilities. For example, if checked, Torkoal will take x1 damage from Water moves</span>
+			</label>
 			<label><input type="checkbox" name="final-evo" id="final-evo">&nbsp; Fully Evolved Only</label>
 			<label class="tooltip"><input type="checkbox" name="scrappy" id="scrappy">&nbsp; Has Scrappy
 				<span class="tooltiptext">Ignore Ghost immunities</span>
@@ -83,7 +86,7 @@
 			</div>
 			<div class="stat-summary-item">
 				<span class="stat-summary-count" id="total-resisted">0</span><br>
-				<div class="tooltip">Not Very Effective<span class="tooltiptext">x0.25 or x0.5</span></div>
+				<div class="tooltip">Not Very Effective<span class="tooltiptext">&lt; x1 (usually x0.25 or x0.5)</span></div>
 			</div>
 			<div class="stat-summary-item">
 				<span class="stat-summary-count" id="total-normal">0</span><br>
@@ -91,7 +94,7 @@
 			</div>
 			<div class="stat-summary-item">
 				<span class="stat-summary-count" id="total-weak">0</span><br>
-				<div class="tooltip">Super Effective<span class="tooltiptext">x2 or x4</span></div>
+				<div class="tooltip">Super Effective<span class="tooltiptext">&gt; x1 (usually x2 or x4)</span></div>
 			</div>
 			<div class="stat-summary-item">
 				<span class="stat-summary-count" id="average">x0</span><br>

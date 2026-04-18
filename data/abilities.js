@@ -21,12 +21,17 @@ abilities = {
     "Prism Armor": { "special": reduceIfEffective },
     "Wonder Guard": { "special": wonderGuard },
 }
+// Abilities that summons weather => damage multiplier of the weather
+weathers = {
+    "Drought": { "Fire": 1.5, "Water": 0.5 },
+    "Drizzle": { "Water": 1.5, "Fire": 0.5 }
+}
 
 function reduceIfEffective(mult) {
-    return mult < 2 ? mult : 3 / 4 * mult
+    return mult < 2 ? 1 : 3 / 4
 }
 
 function wonderGuard(mult) {
-    return mult < 2 ? 0 : mult
+    return mult < 2 ? 0 : 1
 }
 
